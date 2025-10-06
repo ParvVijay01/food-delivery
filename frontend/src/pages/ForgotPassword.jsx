@@ -1,6 +1,9 @@
+import axios from 'axios';
 import React, { useState } from 'react'
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
+import { serverUrl } from '../App';
+import { toast } from "react-toastify"
 
 function ForgotPassword() {
     const borderColor = "#ddd";
@@ -11,6 +14,62 @@ function ForgotPassword() {
     const [confirmPassword, setConfirmPassword] = useState("")
 
     const navigate = useNavigate()
+
+  const handleSendOTP = async () => {
+    try {
+      const result = await axios.post(`${serverUrl}auth/send-otp`, {
+        email
+      }, {withCredentials: true})
+      console.log(`send otp result ---> ${result}`);
+      
+      if(result.status === 200){
+        toast.success("OTP sent successfully")
+        setStep(2)
+      }
+    } catch (error) {
+      console.log(`Error in sending otp ---> ${error}`);
+      toast.error(error.response?.data?.message || 'Error in sending OTP');
+      
+    }
+  }
+
+  const handleVerifyOTP = async () => {
+    try {
+      const result = await axios.post(`${serverUrl}auth/verify-otp`, {email, otp}, {withCredentials: true})
+      console.log(`Verify otp result ---> ${result}`);
+      if(result.status === 200) {
+        toast.success("OTP verified")
+        setStep(3)
+      }
+    } catch (error) {
+      console.log(`Error in verifying OTP: ${error}`);
+      toast.error(error.response?.data?.message || 'Invalid OTP');
+    }
+  }
+
+  const handleResetPassword = async () => {
+    if(!password || !confirmPassword) {
+        toast.error('Please fill in all fields');
+        return;
+    }
+    
+    if(password !== confirmPassword) {
+        toast.error('Passwords do not match');
+        return;
+    }
+    try {
+      const result = await axios.post(`${serverUrl}auth/reset-password`, {email, password}, {withCredentials: true})
+      console.log(`Reset password result ---> ${result}`);
+      if(result.status === 200){
+        navigate('/signin')
+        toast.success('Password reset successful')
+      }
+    } catch (error) {
+      console.log(`Error in reseting password: ${error}`);
+      
+    }
+  }
+
   return (
     <div className="flex w-full items-center justify-center min-h-screen p-4 bg-[#fff9f6]">
       <div className='bg-white rounded-xl shadow-lg w-full p-8 max-w-md'>
@@ -39,7 +98,7 @@ function ForgotPassword() {
             value={email}
           />
         </div>  
-        <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={{}}>send OTP</button>  
+        <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={handleSendOTP}>send OTP</button>  
         </div>
         }
 
@@ -62,7 +121,7 @@ function ForgotPassword() {
             value={otp}
           />
         </div>  
-        <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={{}}>Verify</button>  
+        <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={handleVerifyOTP}>Verify</button>  
         </div>
         }
 
@@ -104,7 +163,7 @@ function ForgotPassword() {
             value={confirmPassword}
           />
         </div>  
-        <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={{}}>Reset Password</button>  
+        <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={handleResetPassword}>Reset Password</button>  
         </div>
         }
       </div>

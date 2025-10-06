@@ -19,7 +19,7 @@ function SignIn() {
 
   const handleSignIn = async () => {
     try {
-        const result = await axios.post(`${serverUrl}auth/signin`, {
+        const result = await axios.post(`${serverUrl}auth/sign-in`, {
             email, password,
         }, {withCredentials: true});
         

@@ -22,7 +22,7 @@ function SignUp() {
 
   const handleSignUp = async () => {
     try {
-        const result = await axios.post(`${serverUrl}auth/signup`, {
+        const result = await axios.post(`${serverUrl}auth/sign-up`, {
             fullName, email, mobile, password, role
         }, {withCredentials: true});
         
