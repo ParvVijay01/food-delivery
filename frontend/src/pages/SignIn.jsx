@@ -99,6 +99,8 @@ function SignIn() {
           </div>
         </div>
 
+        <p onClick={() => navigate("/forgotPassword")} className="text-right mb-3 font-medium cursor-pointer">Forgot Password</p>
+
         
 
         {/* Sign Up Button */}
@@ -115,7 +117,7 @@ function SignIn() {
             <FcGoogle size={20}/>
             <span>Sign up with Google</span>
         </button>
-        <p className="text-center mt-2" onClick={() => navigate("/signUp")}>Don't have an account? <span className="text-[#ff4d2d] cursor-pointer">Sign Un</span></p>
+        <p className="text-center mt-2" onClick={() => navigate("/signUp")}>Don't have an account? <span className="text-[#ff4d2d] cursor-pointer">Sign Up</span></p>
       </div>
 
       
