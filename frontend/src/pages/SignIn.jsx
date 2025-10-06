@@ -99,11 +99,11 @@ function SignIn() {
           </div>
         </div>
 
-        <p onClick={() => navigate("/forgotPassword")} className="text-right mb-3 font-medium cursor-pointer">Forgot Password</p>
+        <div onClick={() => navigate("/forgot-password")} className="text-right mb-3 font-medium cursor-pointer text-[#ff4d2d]">Forgot Password</div>
 
         
 
-        {/* Sign Up Button */}
+        {/* Sign In Button */}
         <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={handleSignIn}>Sign In</button>
 
         {/* Divider with "or" */}
