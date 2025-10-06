@@ -5,6 +5,8 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../App";
+import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 function SignIn() {
   const primaryColor = "#ff4d2d";
@@ -14,19 +16,33 @@ function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate();
 
   const handleSignIn = async () => {
+    if(!email || !password){
+      toast.error("All the fileds are required")
+      return
+    } 
+    setIsLoading(true)
     try {
         const result = await axios.post(`${serverUrl}auth/sign-in`, {
             email, password,
         }, {withCredentials: true});
         
         console.log("results ---> ", result);
+        if(result.status == 200 || result.status == 201){
+          toast.success("Sign In successfull")
+          navigate("/home")
+        }
         
     } catch (error) {
         console.log(error);
+        toast.error(error.response?.data?.message);
+        
+    } finally{
+      setIsLoading(false)
     }
   }
 
@@ -104,7 +120,7 @@ function SignIn() {
         
 
         {/* Sign In Button */}
-        <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={handleSignIn}>Sign In</button>
+        <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={handleSignIn} disabled={isLoading}>{isLoading ? (<ClipLoader color="#FFFFFF" size={20}/>) :  ("Sign In")}</button>
 
         {/* Divider with "or" */}
         <div className="flex items-center my-6">

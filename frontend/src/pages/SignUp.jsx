@@ -5,6 +5,8 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../App";
+import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 function SignUp() {
   const primaryColor = "#ff4d2d";
@@ -17,19 +19,33 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
+    if(!email || !fullName || !password || !mobile){
+      toast.error("All fields are requried")
+      return
+    }
+    setIsLoading(true)
     try {
         const result = await axios.post(`${serverUrl}auth/sign-up`, {
             fullName, email, mobile, password, role
         }, {withCredentials: true});
         
         console.log("results ---> ", result);
+        if(result.status == 201){
+          toast.success("Sign Up succesfull")
+          navigate("/signin")
+        }
         
     } catch (error) {
         console.log(error);
+        toast.error(error.response?.data?.message);
+        
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -170,7 +186,7 @@ function SignUp() {
         </div>
 
         {/* Sign Up Button */}
-        <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={handleSignUp}>Sign Up</button>
+        <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={handleSignUp} disabled={isLoading} >{isLoading ? (<ClipLoader color="#ffffff" size={20}/>) : ("Sign Up")}</button>
 
         {/* Divider with "or" */}
         <div className="flex items-center my-6">
