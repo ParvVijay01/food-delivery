@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../App";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {auth}  from "../../firebase"
 
 function SignIn() {
   const primaryColor = "#ff4d2d";
@@ -43,6 +45,18 @@ function SignIn() {
         
     } finally{
       setIsLoading(false)
+    }
+  }
+
+  const handleGoogleAuth = async () => {
+    const provider = new GoogleAuthProvider()
+    const result = await signInWithPopup(auth, provider)
+    try {
+      const {data} = await axios.post(`${serverUrl}auth/google-auth`, {email: result.user.email, 
+        }, {withCredentials: true})
+        console.log(data);
+    } catch (error) {
+      console.log(`Google auth error: ${error}`);
     }
   }
 
@@ -129,7 +143,7 @@ function SignIn() {
           <hr className="flex-1 border-gray-300" />
         </div>
 
-        <button className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition duration-200 border cursor-pointer border-gray-400 hover:bg-gray-100">
+        <button className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition duration-200 border cursor-pointer border-gray-400 hover:bg-gray-100" onClick={handleGoogleAuth}>
             <FcGoogle size={20}/>
             <span>Sign up with Google</span>
         </button>

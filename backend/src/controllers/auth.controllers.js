@@ -140,3 +140,28 @@ export const resetPassword = async (req,res) => {
         
     }
 }
+
+export const googleAuth = async (req,res) => {
+    try {
+        const {fullName, email, mobile, role} = req.body
+        let user = await User.findOne({email})
+        if(!user){
+            user = await User.create({
+                fullName, email, mobile, role 
+            })
+        }
+        const token = await genToken(user._id)
+        res.cookie("token", token, {
+            secure: false, //false till the code is in development, change it to true when the server is deployed.
+            sameSite: "strict",
+            maxAge: 7*24*60*60*1000, //7 days, 24 hours, 60 min, 60 secs, 1000 millieseconds 
+            httpOnly: true
+        })
+
+        return res.status(200).json(user)
+        
+    } catch (error) {
+        console.log(`Google auth error: ${error}`);
+        res.status(500).json({message: "Internal server error"})
+    }
+}
