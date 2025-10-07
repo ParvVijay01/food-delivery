@@ -22,6 +22,7 @@ function SignUp() {
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false)
+  const [err, setErr] = useState("")
 
 
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ function SignUp() {
     } catch (error) {
         console.log(error);
         toast.error(error.response?.data?.message);
-        
+        setErr(error.response.data.message)
     } finally {
       setIsLoading(false)
     }
@@ -54,16 +55,32 @@ function SignUp() {
 
   const handleGoogleAuth = async () => {
     if(!mobile){
+      setErr("Mobile number is required")
       return toast.error("Please enter your mobile number")
     }
-    const provider = new GoogleAuthProvider()
-    const result = await signInWithPopup(auth, provider)
+    
     try {
-      const {data} = await axios.post(`${serverUrl}auth/google-auth`, {fullName: result.user.displayName, email: result.user.email, mobile, role
-        }, {withCredentials: true})
-        console.log(data);
+      const provider = new GoogleAuthProvider()
+      const result = await signInWithPopup(auth, provider)
+      
+      const {data} = await axios.post(`${serverUrl}auth/google-auth`, {
+        fullName: result.user.displayName, 
+        email: result.user.email, 
+        mobile, 
+        role,
+        type: 'signup' // Specify this is for signup
+      }, {withCredentials: true})
+      
+      console.log(data);
+      setErr("")
+      toast.success("Google sign up successful!")
+      navigate("/signin")
+      
     } catch (error) {
       console.log(`Google auth error: ${error}`);
+      const errorMessage = error.response?.data?.message || "Google sign up failed"
+      setErr(errorMessage)
+      toast.error(errorMessage)
     }
   }
 
@@ -102,6 +119,7 @@ function SignUp() {
             style={{ border: `1px solid ${borderColor}` }}
             onChange={(e) => setFullName(e.target.value)}
             value={fullName}
+            required
           />
         </div>
 
@@ -121,6 +139,7 @@ function SignUp() {
             style={{ border: `1px solid ${borderColor}` }}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
+            required
           />
         </div>
 
@@ -140,6 +159,7 @@ function SignUp() {
             style={{ border: `1px solid ${borderColor}` }}
             onChange={(e) => setMobile(e.target.value)}
             value={mobile}
+            required
           />
         </div>
 
@@ -160,6 +180,7 @@ function SignUp() {
                 style={{ border: `1px solid ${borderColor}` }}
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
+                required
             />
             <button
               className="absolute right-3 top-3 text-gray-500"
@@ -205,6 +226,11 @@ function SignUp() {
 
         {/* Sign Up Button */}
         <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={handleSignUp} disabled={isLoading} >{isLoading ? (<ClipLoader color="#ffffff" size={20}/>) : ("Sign Up")}</button>
+        
+        {/* Error Message */}
+        {err && (
+          <p className="text-red-500 text-center my-1">*{err}</p>
+        )}
 
         {/* Divider with "or" */}
         <div className="flex items-center my-6">

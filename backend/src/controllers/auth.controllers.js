@@ -18,7 +18,7 @@ export const signUp = async (req,res) => {
             return res.status(400).json({message: "Password must be atleast 6 characters long"})
         }
 
-        if(mobile.length < 10){
+        if(mobile.length != 10){
             return res.status(400).json({message: "Mobile number must be 10 digits long"})
         }
 
@@ -143,13 +143,25 @@ export const resetPassword = async (req,res) => {
 
 export const googleAuth = async (req,res) => {
     try {
-        const {fullName, email, mobile, role} = req.body
+        const {fullName, email, mobile, role, type} = req.body 
         let user = await User.findOne({email})
+        
+        
+        if(type === 'signup' && user){
+            return res.status(400).json({message: "User already exists. Please sign in instead."})
+        }
+        
+        
+        if(type === 'signin' && !user){
+            return res.status(400).json({message: "User does not exist. Please sign up first."})
+        }
+        
         if(!user){
             user = await User.create({
                 fullName, email, mobile, role 
             })
         }
+        
         const token = await genToken(user._id)
         res.cookie("token", token, {
             secure: false, //false till the code is in development, change it to true when the server is deployed.

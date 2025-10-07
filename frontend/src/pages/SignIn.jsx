@@ -19,6 +19,7 @@ function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false)
+  const [err, setErr] = useState("")
 
   const navigate = useNavigate();
 
@@ -38,9 +39,11 @@ function SignIn() {
           toast.success("Sign In successfull")
           navigate("/home")
         }
+        setErr("")
         
     } catch (error) {
         console.log(error);
+        setErr(error.response.data.message)
         toast.error(error.response?.data?.message);
         
     } finally{
@@ -49,14 +52,25 @@ function SignIn() {
   }
 
   const handleGoogleAuth = async () => {
-    const provider = new GoogleAuthProvider()
-    const result = await signInWithPopup(auth, provider)
     try {
-      const {data} = await axios.post(`${serverUrl}auth/google-auth`, {email: result.user.email, 
-        }, {withCredentials: true})
-        console.log(data);
+      const provider = new GoogleAuthProvider()
+      const result = await signInWithPopup(auth, provider)
+      
+      const {data} = await axios.post(`${serverUrl}auth/google-auth`, {
+        email: result.user.email,
+        type: 'signin' // Specify this is for signin
+      }, {withCredentials: true})
+      
+      console.log(data);
+      toast.success("Google sign in successful!")
+      navigate("/home")
+      setErr("")
+      
     } catch (error) {
       console.log(`Google auth error: ${error}`);
+      const errorMessage = error.response?.data?.message || "Google sign in failed"
+      toast.error(errorMessage)
+      setErr(errorMessage)
     }
   }
 
@@ -97,6 +111,7 @@ function SignIn() {
             style={{ border: `1px solid ${borderColor}` }}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
+            required
           />
         </div>
 
@@ -119,6 +134,7 @@ function SignIn() {
                 style={{ border: `1px solid ${borderColor}` }}
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
+                required
             />
             <button
               className="absolute right-3 top-3 text-gray-500"
@@ -135,6 +151,10 @@ function SignIn() {
 
         {/* Sign In Button */}
         <button className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`} onClick={handleSignIn} disabled={isLoading}>{isLoading ? (<ClipLoader color="#FFFFFF" size={20}/>) :  ("Sign In")}</button>
+        {/* Error Message */}
+        {err && (
+          <p className="text-red-500 text-center my-1">*{err}</p>
+        )}
 
         {/* Divider with "or" */}
         <div className="flex items-center my-6">
@@ -145,7 +165,7 @@ function SignIn() {
 
         <button className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition duration-200 border cursor-pointer border-gray-400 hover:bg-gray-100" onClick={handleGoogleAuth}>
             <FcGoogle size={20}/>
-            <span>Sign up with Google</span>
+            <span>Sign in with Google</span>
         </button>
         <p className="text-center mt-2" onClick={() => navigate("/signUp")}>Don't have an account? <span className="text-[#ff4d2d] cursor-pointer">Sign Up</span></p>
       </div>

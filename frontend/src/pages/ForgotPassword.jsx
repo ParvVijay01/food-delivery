@@ -14,6 +14,7 @@ function ForgotPassword() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false)
+  const [err, setErr] = useState("")
 
   const navigate = useNavigate();
 
@@ -37,9 +38,12 @@ function ForgotPassword() {
         toast.success("OTP sent successfully");
         setStep(2);
       }
+      setErr("")
     } catch (error) {
       console.log(`Error in sending otp ---> ${error}`);
       toast.error(error.response?.data?.message || "Error in sending OTP");
+      setErr(error.response?.data?.message || "Error in sending OTP")
+     
     }finally{
       setIsLoading(false)
     }
@@ -57,9 +61,11 @@ function ForgotPassword() {
         toast.success("OTP verified");
         setStep(3);
       }
+      setErr("")
     } catch (error) {
       console.log(`Error in verifying OTP: ${error}`);
       toast.error(error.response?.data?.message || "Invalid OTP");
+      setErr(error.response?.data?.message || "Invalid OTP")
     }
   };
 
@@ -84,9 +90,11 @@ function ForgotPassword() {
         navigate("/signin");
         toast.success("Password reset successful");
       }
+      setErr("")
     } catch (error) {
       console.log(`Error in reseting password: ${error}`);
       toast.error(error.response?.data?.message);
+      setErr(error.response?.data?.message)
     }
   };
 
@@ -132,6 +140,10 @@ function ForgotPassword() {
               {isLoading ? (<ClipLoader color="#ffffff" size={20} />) : ("Send OTP")}
               
             </button>
+            {err && (
+          <p className="text-red-500 text-center my-1">*{err}</p>
+        )}
+
           </div>
         )}
 
@@ -160,6 +172,10 @@ function ForgotPassword() {
             >
               Verify
             </button>
+            {err && (
+          <p className="text-red-500 text-center my-1">*{err}</p>
+        )}
+
           </div>
         )}
 
@@ -206,6 +222,10 @@ function ForgotPassword() {
             >
               Reset Password
             </button>
+            {err && (
+          <p className="text-red-500 text-center my-1">*{err}</p>
+        )}
+
           </div>
         )}
       </div>

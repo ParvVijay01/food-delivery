@@ -3,12 +3,13 @@ import SignUp from "./pages/SignUp"
 import SignIn from "./pages/SignIn"
 import ForgotPassword from "./pages/ForgotPassword"
 import { ToastContainer } from "react-toastify"
+import useGetCurrentUser from "./hooks/useGetCurrentUser"
 
 
 export const serverUrl = "http://localhost:8000/api/"
 function App() {
   
-
+  useGetCurrentUser()
   return (
     <>
     <ToastContainer
