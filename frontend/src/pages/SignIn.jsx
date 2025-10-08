@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import {auth}  from "../../firebase"
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice";
 
 function SignIn() {
   const primaryColor = "#ff4d2d";
@@ -22,6 +24,7 @@ function SignIn() {
   const [err, setErr] = useState("")
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSignIn = async () => {
     if(!email || !password){
@@ -35,6 +38,7 @@ function SignIn() {
         }, {withCredentials: true});
         
         console.log("results ---> ", result);
+        dispatch(setUserData(result.data))
         if(result.status == 200 || result.status == 201){
           toast.success("Sign In successfull")
           navigate("/home")
@@ -60,7 +64,7 @@ function SignIn() {
         email: result.user.email,
         type: 'signin' // Specify this is for signin
       }, {withCredentials: true})
-      
+      dispatch(setUserData(data))
       console.log(data);
       toast.success("Google sign in successful!")
       navigate("/home")
