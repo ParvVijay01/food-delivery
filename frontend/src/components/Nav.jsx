@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { MdOutlineCancel } from "react-icons/md";
 
 function Nav() {
-  const { userData } = useSelector((state) => state.user);
+  const { userData, city } = useSelector((state) => state.user);
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   return (
@@ -15,7 +15,7 @@ function Nav() {
         <div className="w-[90%] h-[50px] bg-white shadow-xl rounded-lg items-center gap-[20px] flex fixed top-[90px] left-[5%]">
           <div className="flex items-center gap-[10px] w-[30%] overflow-hiddenpx-[10px] border-r-[2px] border-gray-400">
             <FaLocationDot className="text-[#ff4d2d]" size={25} />
-            <div className="w-[80%] truncate text-gray-600">Kota</div>
+            <div className="w-[80%] truncate text-gray-600">{city}</div>
           </div>
           <div className="flex items-center gap-[10px] w-[80%]">
             <IoIosSearch size={25} className="text-[#ff4d2d]" />
@@ -34,7 +34,7 @@ function Nav() {
       <div className="md:w-[60%] lg:w-[40%] h-[50px] bg-white shadow-xl rounded-lg items-center gap-[20px] md:flex hidden">
         <div className="flex items-center gap-[10px] w-[30%] overflow-hiddenpx-[10px] border-r-[2px] border-gray-400">
           <FaLocationDot className="text-[#ff4d2d]" size={25} />
-          <div className="w-[80%] truncate text-gray-600"></div>
+          <div className="w-[80%] truncate text-gray-600">{city}</div>
         </div>
         <div className="flex items-center gap-[10px] w-[80%]">
           <IoIosSearch size={25} className="text-[#ff4d2d]" />

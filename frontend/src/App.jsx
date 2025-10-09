@@ -9,7 +9,8 @@ import { useSelector } from "react-redux"
 import useGetCity from "./hooks/useGetCity"
 
 
-export const serverUrl = "http://localhost:8000/api/"
+// export const serverUrl = "http://localhost:8000/api/"
+export const serverUrl = "https://food-delivery-2uje.onrender.com/api/"
 function App() {
   
   const { loading } = useGetCurrentUser()
