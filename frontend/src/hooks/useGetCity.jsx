@@ -11,7 +11,14 @@ function useGetCity() {
         navigator.geolocation.getCurrentPosition(async (position) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
+        console.log('====================================');
+        console.log(longitude);
+        console.log(latitude);
+        console.log('====================================');
         const result = await axios.get(`https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${apikey}`)
+        console.log('====================================');
+        console.log(result.data);
+        console.log('====================================');
         console.log('====================================');
         console.log("City ---> ", result.data.results[0].city);
         console.log('====================================');
