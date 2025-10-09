@@ -9,9 +9,11 @@ import axios from "axios";
 import { setUserData } from "../redux/userSlice";
 import { toast } from "react-toastify";
 import { IoMdAdd } from "react-icons/io";
+import { TbReceiptRupee } from "react-icons/tb";
 
 function Nav() {
   const { userData, city } = useSelector((state) => state.user);
+  const { myShopData } = useSelector((state) => state.user);
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const dispatch = useDispatch();
@@ -83,13 +85,25 @@ function Nav() {
           ))}
 
         {userData.role == "owner" ? <>
-        <button className="hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] ">
+        {myShopData && (<><button className="hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] ">
           <IoMdAdd size={20}/>
           <span>Add Food Item</span>
         </button>
         <button className="md:hidden flex items-center p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]">
           <IoMdAdd size={20}/>
-        </button>
+        </button></>)}
+        
+        <div className="hidden md:flex items-center gap-2 cursor-pointer rleative px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium relative">
+          <TbReceiptRupee size={20} />
+          <span>My Orders</span>
+          <span className="absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]">5</span>
+        </div>
+
+        <div className="md:hidden flex items-center gap-2 cursor-pointer rleative px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium relative">
+          <TbReceiptRupee size={20} />
+          <span className="absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]">5</span>
+        </div>
+        
         </> : (
         <>
           <div className="relative cursor-pointer">

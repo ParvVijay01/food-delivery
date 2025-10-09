@@ -7,6 +7,8 @@ import { ToastContainer } from "react-toastify"
 import useGetCurrentUser from "./hooks/useGetCurrentUser"
 import { useSelector } from "react-redux"
 import useGetCity from "./hooks/useGetCity"
+import useGetMyShop from "./hooks/useGetMyShop"
+import CreateEditShop from "./pages/CreateEditShop"
 
 
 // export const serverUrl = "http://localhost:8000/api/"
@@ -15,6 +17,7 @@ function App() {
   
   const { loading } = useGetCurrentUser()
   useGetCity()
+  useGetMyShop()
   const {userData} = useSelector(state => state.user)
   console.log(`User data from useSelector--->`, userData);
   
@@ -43,6 +46,7 @@ function App() {
     <Route path="/signin" element={!userData ? <SignIn/> : <Navigate to={"/"}/>}></Route>
     <Route path="/forgot-password" element={!userData ? <ForgotPassword/>: <Navigate to={"/"}/>}></Route>
     <Route path="/" element={userData? <Home /> : <Navigate to={"/signin"}/>}></Route>
+    <Route path="/create-edit-shop" element={userData? <CreateEditShop /> : <Navigate to={"/signin"}/>}></Route>
   </Routes>
   </>
   )
