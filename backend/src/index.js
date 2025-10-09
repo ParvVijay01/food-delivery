@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser"
 import authRouter from "./routes/auth.routes.js"
 import cors from "cors"
 import userRouter from "./routes/user.routes.js"
+import shopRouter from "./routes/shop.routes.js"
+import itemRouter from "./routes/item.routes.js"
 
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -21,9 +23,14 @@ app.use(cors({
 }))
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
+app.use("/api/shop", shopRouter)
+app.use("/api/item", itemRouter)
+
 app.use("/", (req,res) => {
     res.send("Hello")
 })
+
+app.use("/public", express.static("public"))
 
 app.listen(PORT, (req,res) => {
     connectDB()

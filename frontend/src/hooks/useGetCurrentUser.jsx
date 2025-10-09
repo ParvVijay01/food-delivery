@@ -16,7 +16,12 @@ function useGetCurrentUser() {
         setLoading(true);
         const result = await axios.get(
           `${serverUrl}user/current`,
-          { withCredentials: true }
+          { 
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          }
         );
         dispatch(setUserData(result.data))
         console.log("Current user:", result.data);
@@ -26,12 +31,13 @@ function useGetCurrentUser() {
         console.log("Failed to fetch user:", error);
         setError(error.response?.data?.message || "Failed to fetch user");
         setUser(null);
+        dispatch(setUserData(null)); // Clear user data in Redux when there's an error
       } finally {
         setLoading(false);        
       }
     };
     fetchUser();
-  }, []);
+  }, [dispatch]);
 
   return { user, loading, error };  
 }
