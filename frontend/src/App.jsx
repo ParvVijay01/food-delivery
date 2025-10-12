@@ -12,8 +12,8 @@ import CreateEditShop from "./pages/CreateEditShop"
 import Additem from "./pages/Additem"
 
 
-export const serverUrl = "http://localhost:8000/api/"
-// export const serverUrl = "https://food-delivery-2uje.onrender.com/api/"
+// export const serverUrl = "http://localhost:8000/api/"
+export const serverUrl = "https://food-delivery-2uje.onrender.com/api/"
 function App() {
   
   const { loading } = useGetCurrentUser()
