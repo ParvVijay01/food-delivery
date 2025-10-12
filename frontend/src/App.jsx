@@ -9,10 +9,11 @@ import { useSelector } from "react-redux"
 import useGetCity from "./hooks/useGetCity"
 import useGetMyShop from "./hooks/useGetMyShop"
 import CreateEditShop from "./pages/CreateEditShop"
+import Additem from "./pages/Additem"
 
 
-// export const serverUrl = "http://localhost:8000/api/"
-export const serverUrl = "https://food-delivery-2uje.onrender.com/api/"
+export const serverUrl = "http://localhost:8000/api/"
+// export const serverUrl = "https://food-delivery-2uje.onrender.com/api/"
 function App() {
   
   const { loading } = useGetCurrentUser()
@@ -47,6 +48,7 @@ function App() {
     <Route path="/forgot-password" element={!userData ? <ForgotPassword/>: <Navigate to={"/"}/>}></Route>
     <Route path="/" element={userData? <Home /> : <Navigate to={"/signin"}/>}></Route>
     <Route path="/create-edit-shop" element={userData? <CreateEditShop /> : <Navigate to={"/signin"}/>}></Route>
+    <Route path="/add-item" element={userData? <Additem /> : <Navigate to={"/signin"}/>}></Route>
   </Routes>
   </>
   )
